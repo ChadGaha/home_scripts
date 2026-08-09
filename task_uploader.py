@@ -24,7 +24,7 @@ creds = Credentials.from_service_account_file(
 client = gspread.authorize(creds)
 
 # Open the Google Sheet by title
-sheet = client.open("Todolist <3").worksheet("Shared") # Or use sheet index/URL
+sheet = client.open("Todolist <3").worksheet("Us") # Or use sheet index/URL
 
 all_current_tasks = sheet.get_all_values()
 current_tasks = list()
