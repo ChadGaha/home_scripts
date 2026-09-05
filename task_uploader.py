@@ -77,6 +77,7 @@ weekly_tasks = [
 
 week_cutoff_date = datetime.now() - timedelta(days=7)
 
+
 last_week_df = completed_df[completed_df["Date Finished"] > week_cutoff_date]
 last_week_list = last_week_df["Task"].tolist()
 #print(last_week_list)
