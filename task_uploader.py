@@ -24,7 +24,7 @@ creds = Credentials.from_service_account_file(
 client = gspread.authorize(creds)
 
 # Open the Google Sheet by title
-sheet = client.open("Todolist").worksheet("Shared") # Or use sheet index/URL
+sheet = client.open("Todolist <3").worksheet("Us") # Or use sheet index/URL
 
 all_current_tasks = sheet.get_all_values()
 current_tasks = list()
@@ -58,7 +58,7 @@ if len(daily_tasks) > 0:
 else:
     print('No daily tasks to upload')
 
-completed_sheet = client.open("Todolist").worksheet("Completed Tasks")
+completed_sheet = client.open("Todolist <3").worksheet("Completed Tasks")
 sheet_data = completed_sheet.get_all_values()
 
 headers = sheet_data[0]
@@ -76,6 +76,7 @@ weekly_tasks = [
 ]
 
 week_cutoff_date = datetime.now() - timedelta(days=7)
+
 
 last_week_df = completed_df[completed_df["Date Finished"] > week_cutoff_date]
 last_week_list = last_week_df["Task"].tolist()
