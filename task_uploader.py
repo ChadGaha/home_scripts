@@ -17,22 +17,18 @@ creds = Credentials.from_service_account_file(
 raw_date = datetime.now()
 dt = raw_date.strftime("%m/%d/%y %H:%M:%S")
 
-daily_tasks = [
-    ["Make the bed (Daily)", 3, dt]
-]
-
 # Authenticate and create the client
 client = gspread.authorize(creds)
 
 
 
 # Open the Google Sheet by title
+#change to the actual file name for prod
+file_sheet = "Copy of Todolist <3"
 
-#real sheet
-# sheet = client.open("Todolist <3").worksheet("Us") # Or use sheet index/URL
 
 #testing sheet
-sheet = client.open("Copy of Todolist <3").worksheet("Us") # Or use sheet index/URL
+sheet = client.open(file_sheet).worksheet("Us") # Or use sheet index/URL
 
 
 all_current_tasks = sheet.get_all_values()
@@ -42,11 +38,28 @@ for t in all_current_tasks:
 
 starting_row = len(sheet.get_all_values()) + 1
 
+scheduled_task_sheet = client.open(file_sheet).worksheet("Task List")
+
+
+all_scheduled_tasks = scheduled_task_sheet.get_all_values()
+
+sched_task_df = pd.DataFrame(
+    all_scheduled_tasks[1:],
+    columns=all_scheduled_tasks[0]
+)
+
+print(sched_task_df)
+
+exit()
 
 rule = DataValidationRule(
     condition=BooleanCondition('boolean'),
     showCustomUi=True
 )
+
+daily_tasks = [
+    ["Make the bed (Daily)", 3, dt]
+]
 
 daily_tasks = [task for task in daily_tasks if task[0] not in current_tasks]
 daily_length = len(daily_tasks)
