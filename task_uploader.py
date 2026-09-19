@@ -28,15 +28,15 @@ file_sheet = "Copy of Todolist <3"
 
 
 #testing sheet
-sheet = client.open(file_sheet).worksheet("Us") # Or use sheet index/URL
+# sheet = client.open(file_sheet).worksheet("Us") # Or use sheet index/URL
 
 
-all_current_tasks = sheet.get_all_values()
-current_tasks = list()
-for t in all_current_tasks:
-    current_tasks.append(t[0])
+# all_current_tasks = sheet.get_all_values()
+# current_tasks = list()
+# for t in all_current_tasks:
+#     current_tasks.append(t[0])
 
-starting_row = len(sheet.get_all_values()) + 1
+#starting_row = len(sheet.get_all_values()) + 1
 
 scheduled_task_sheet = client.open(file_sheet).worksheet("Task List")
 
@@ -48,8 +48,53 @@ sched_task_df = pd.DataFrame(
     columns=all_scheduled_tasks[0]
 )
 
-print(sched_task_df)
+#print(sched_task_df)
 
+# def add_tasks_to_specific_todo_list (Sheet_name, Frequency):
+#     user_tasksdf = sched_task_df[(sched_task_df['Sheet Name'] == Sheet_name) &
+#                     (sched_task_df['Frequency'] == Frequency)]
+#     #if Frequency is "Daily":
+#     user_task_list = list(user_tasksdf.itertuples(index=False, name=None))
+#     new_list =  [(t[0] + ' )' + t[2] +")", t[1], dt) for t in user_task_list]
+
+#     print(new_list)
+
+# add_tasks_to_specific_todo_list('Lydia', 'Daily') 
+
+frequencies = ('Daily', 'Weekly', 'Monthly', 'Quarterly')
+
+completed_sheet = client.open(file_sheet).worksheet("Completed Tasks")
+sheet_data = completed_sheet.get_all_values()
+
+headers = sheet_data[0]
+rows = sheet_data[1:]
+
+completed_df = pd.DataFrame(rows, columns=headers)
+
+completed_df["Date Finished"] = pd.to_datetime(completed_df["Date Finished"], errors="coerce")
+completed_df = completed_df.dropna(subset=["Date Finished"])
+
+
+def add_for_sheet (Sheet_name):
+    sheet = client.open(file_sheet).worksheet(Sheet_name)
+    all_current_tasks = sheet.get_all_values()
+    current_tasks = list()
+    for t in all_current_tasks:
+        current_tasks.append(t[0])
+
+    user_tasks_df = sched_task_df[sched_task_df['Sheet Name'] == Sheet_name]
+    user_task_list = list(user_tasks_df.itertuples(index=False, name=None))
+    new_list =  [(t[0] + ' )' + t[2] +")", t[1], dt) for t in user_task_list]
+
+    completed_df_for_sheet = completed_df[completed_df['Sheet From'] == Sheet_name]
+
+    frequencies = ('Daily', 'Weekly', 'Monthly', 'Quarterly')
+
+    for freq in frequencies:
+        #completed_df_for_sheet_by_freq = completed_df_for_sheet[completed_df_for_sheet['Frequency'] == freq]
+        #print (completed_df_for_sheet_by_freq)
+
+add_for_sheet('Us')
 exit()
 
 rule = DataValidationRule(
@@ -81,7 +126,7 @@ if daily_length  > 0:
 else:
     print('No daily tasks to upload')
 
-completed_sheet = client.open("Todolist <3").worksheet("Completed Tasks")
+completed_sheet = client.open(file_sheet).worksheet("Completed Tasks")
 sheet_data = completed_sheet.get_all_values()
 
 headers = sheet_data[0]
