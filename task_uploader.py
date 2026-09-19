@@ -36,7 +36,7 @@ file_sheet = "Copy of Todolist <3"
 # for t in all_current_tasks:
 #     current_tasks.append(t[0])
 
-#starting_row = len(sheet.get_all_values()) + 1
+
 
 scheduled_task_sheet = client.open(file_sheet).worksheet("Task List")
 
@@ -60,7 +60,10 @@ sched_task_df = pd.DataFrame(
 #     print(new_list)
 
 # add_tasks_to_specific_todo_list('Lydia', 'Daily') 
-
+rule = DataValidationRule(
+    condition=BooleanCondition('boolean'),
+    showCustomUi=True
+)
 frequencies = ('Daily', 'Weekly', 'Monthly', 'Quarterly')
 
 completed_sheet = client.open(file_sheet).worksheet("Completed Tasks")
@@ -77,6 +80,7 @@ completed_df = completed_df.dropna(subset=["Date Finished"])
 
 def add_for_sheet (Sheet_name):
     sheet = client.open(file_sheet).worksheet(Sheet_name)
+    starting_row = len(sheet.get_all_values()) + 1
     all_current_tasks = sheet.get_all_values()
     current_tasks = list()
     for t in all_current_tasks:
@@ -84,17 +88,33 @@ def add_for_sheet (Sheet_name):
 
     user_tasks_df = sched_task_df[sched_task_df['Sheet Name'] == Sheet_name]
     user_task_list = list(user_tasks_df.itertuples(index=False, name=None))
-    new_list =  [(t[0] + ' )' + t[2] +")", t[1], dt) for t in user_task_list]
-
+    final_user_task_list =  [(t[0] + " (" + t[2] +")", t[1], dt) for t in user_task_list]
+    print(final_user_task_list)
     completed_df_for_sheet = completed_df[completed_df['Sheet From'] == Sheet_name]
 
     frequencies = ('Daily', 'Weekly', 'Monthly', 'Quarterly')
 
     for freq in frequencies:
+        if freq == 'Daily':
+            frequency_task_list = [task for task in final_user_task_list if task[0] not in current_tasks]
+            for i, task in enumerate(frequency_task_list):
+                # Add an empty string for the checkbox column
+                task = list(task)
+                task.append("")
+                sheet.append_row(task, value_input_option='USER_ENTERED')
+                #print(task)
+                # Figure out which row this is
+                current_row = starting_row + i
+
+                # Add checkbox to column D (4)
+                set_data_validation_for_cell_range(sheet, f'D{current_row}', rule)
+        
+        else:
+            print(freq)
         #completed_df_for_sheet_by_freq = completed_df_for_sheet[completed_df_for_sheet['Frequency'] == freq]
         #print (completed_df_for_sheet_by_freq)
 
-add_for_sheet('Us')
+add_for_sheet('Lydia')
 exit()
 
 rule = DataValidationRule(
