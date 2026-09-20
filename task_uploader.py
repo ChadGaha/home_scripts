@@ -5,7 +5,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.service_account import Credentials
 from datetime import datetime, timedelta
 import pandas as pd
-
+import time
 
 # Define the scope (permissions you need)
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -50,7 +50,7 @@ completed_df["Date Finished"] = pd.to_datetime(completed_df["Date Finished"], er
 completed_df = completed_df.dropna(subset=["Date Finished"])
 
 def add_for_sheet (Sheet_name):
-    print('Now uploading tasks for ', Sheet_name, ".", '\n')
+    print('Now uploading tasks for ', Sheet_name, '\n')
     sheet = client.open(file_sheet).worksheet(Sheet_name)
     starting_row = len(sheet.get_all_values()) + 1
     all_current_tasks = sheet.get_all_values()
@@ -103,7 +103,7 @@ def add_for_sheet (Sheet_name):
             user_period_task_list = list(period_df.itertuples(index=False, name=None))
             final_user_period_task_list = [(t[0] + " (" + freq + ")", t[1], dt) for t in user_period_task_list]
             completed_names_this_period = [t[0] for t in final_user_period_task_list]
-            frequency_task_list = [task for task in final_user_task_list if f"({freq})" in task[0] and task[0] not in completed_names_this_period]
+            frequency_task_list = [task for task in final_user_task_list if f"({freq})" in task[0] and task[0] not in current_tasks and task[0] not in completed_names_this_period]
             for i, task in enumerate(frequency_task_list):
                             # Add an empty string for the checkbox column
                             task = list(task)
@@ -118,8 +118,9 @@ def add_for_sheet (Sheet_name):
 
             len_for_freq = len(frequency_task_list)
             starting_row += len_for_freq
-            print(freq, 'tasks uploaded for', Sheet_name, ": ", len_for_freq)
+            print(freq, 'tasks uploaded for', Sheet_name, "-", len_for_freq)
     print('\n')
+    time.sleep(8)
         #completed_df_for_sheet_by_freq = completed_df_for_sheet[completed_df_for_sheet['Frequency'] == freq]
         #print (completed_df_for_sheet_by_freq)
 
