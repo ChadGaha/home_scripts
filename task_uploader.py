@@ -20,7 +20,7 @@ dt = raw_date.strftime("%m/%d/%y %H:%M:%S")
 # Authenticate and create the client
 client = gspread.authorize(creds)
 
-file_sheet = "Copy of Todolist <3"
+file_sheet = "Todolist <3"
 
 scheduled_task_sheet = client.open(file_sheet).worksheet("Task List")
 
