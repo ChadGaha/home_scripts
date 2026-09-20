@@ -83,6 +83,7 @@ def add_for_sheet (Sheet_name):
 
                 # Add checkbox to column D (4)
                 set_data_validation_for_cell_range(sheet, f'D{current_row}', rule)
+                time.sleep(1)
             len_for_freq = len(frequency_task_list)
             starting_row += len_for_freq
             print(freq, 'tasks uploaded for', Sheet_name, "-", len_for_freq, '.')
@@ -115,15 +116,13 @@ def add_for_sheet (Sheet_name):
             
                             # Add checkbox to column D (4)
                             set_data_validation_for_cell_range(sheet, f'D{current_row}', rule)
+                            time.sleep(1)
 
             len_for_freq = len(frequency_task_list)
             starting_row += len_for_freq
             print(freq, 'tasks uploaded for', Sheet_name, "-", len_for_freq)
     print('\n')
-    time.sleep(8)
-        #completed_df_for_sheet_by_freq = completed_df_for_sheet[completed_df_for_sheet['Frequency'] == freq]
-        #print (completed_df_for_sheet_by_freq)
-
+        
 add_for_sheet('Us')
 
 add_for_sheet('Lydia')
