@@ -102,9 +102,9 @@ def add_for_sheet (Sheet_name):
 
             period_df = completed_df_for_sheet[completed_df_for_sheet["Date Finished"] > time_cutoff_date]
             user_period_task_list = list(period_df.itertuples(index=False, name=None))
-            final_user_period_task_list = [(t[0] + " (" + freq + ")", t[1], dt) for t in user_period_task_list]
-            completed_names_this_period = [t[0] for t in final_user_period_task_list]
+            completed_names_this_period = [t[0] for t in user_period_task_list]
             frequency_task_list = [task for task in final_user_task_list if f"({freq})" in task[0] and task[0] not in current_tasks and task[0] not in completed_names_this_period]
+
             for i, task in enumerate(frequency_task_list):
                             # Add an empty string for the checkbox column
                             task = list(task)
