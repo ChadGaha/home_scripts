@@ -86,7 +86,7 @@ def add_for_sheet (Sheet_name):
                 time.sleep(1)
             len_for_freq = len(frequency_task_list)
             starting_row += len_for_freq
-            print(freq, 'tasks uploaded for', Sheet_name, "-", len_for_freq, '.')
+            print(freq, 'tasks uploaded for', Sheet_name, "-", len_for_freq)
         
         else:
             if freq == 'Weekly':
